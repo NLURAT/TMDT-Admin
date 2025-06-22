@@ -1,0 +1,114 @@
+.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('/image/Bg-login.png') no-repeat center center;
+    background-size: cover;
+}
+
+.auth-form {
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3); // shadow đậm
+    width: 100%;
+    max-width: 400px;
+    backdrop-filter: blur(10px);
+
+    h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+
+        input {
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .password-field {
+            position: relative;
+
+            input {
+                width: 100%;
+                padding-right: 2.5rem;
+            }
+
+            .toggle-password {
+                position: absolute;
+                top: 50%;
+                right: 0.75rem;
+                transform: translateY(-50%);
+                cursor: pointer;
+                font-size: 1.2rem;
+            }
+        }
+
+        button[type='submit'] {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+
+            &:hover {
+                background: #357ab8;
+            }
+        }
+    }
+
+    .auth-options {
+        margin-top: 1.5rem;
+        text-align: center;
+
+        .forgot,
+        .toggle {
+            display: inline-block;
+            margin: 0.25rem 0.5rem;
+            font-weight: bold;
+            color: #4a90e2;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+        }
+
+        .google-login {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+
+            .google-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+                border: 1px solid #ddd;
+                padding: 0.5rem 1rem;
+                border-radius: 6px;
+                background: #fff;
+                transition: background 0.3s;
+
+                &:hover {
+                    background: #f1f1f1;
+                }
+            }
+        }
+    }
+
+    .error {
+        color: red;
+        margin-top: 0.5rem;
+        text-align: center;
+    }
+}
