@@ -8,7 +8,7 @@ import { FaEdit, FaArrowDown } from "react-icons/fa";
 import { MdDelete, MdAddBox } from "react-icons/md";
 import { GrPowerReset } from "react-icons/gr";
 import { useEffect, useState } from "react";
-import adminApi from "../api/adminApi";
+import voucherApi from "../api/voucherApi";
 import PaginationCom from "../components/PaginationCom";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
@@ -23,7 +23,9 @@ const VoucherManagement = () => {
         code: "",
         description: "",
         quantity: "",
-        discount: ""
+        discount: "",
+        minOrderValue: "",
+        expiryDate: ""
     });
 
     const totalPages = Math.ceil(voucher.length / itemPerPage);
@@ -41,13 +43,11 @@ const VoucherManagement = () => {
 
     const fetchVoucher = async () => {
         try {
-            const response = await adminApi.getAllVoucher();
-            setVoucher(response.data.result);
+            const response = await voucherApi.getAllVoucher();
+            setVoucher(response.data);
         } catch (err) {
-            if (error.response) {
-                const errMessage = error.response.data?.message || 'Đã xảy ra lỗi';
-                toast.error(errMessage);
-            }
+            toast.error(err);
+
         }
     };
 
@@ -56,7 +56,9 @@ const VoucherManagement = () => {
             code: voucher.code,
             description: voucher.description,
             quantity: voucher.quantity,
-            discount: voucher.discount
+            discount: voucher.discount,
+            minOrderValue: voucher.minOrderValue,
+            expiryDate: voucher.expiryDate
         });
         setEditingId(voucher.id);   // lưu id
         setEditMode(true);          // bật chế độ chỉnh sửa
@@ -68,11 +70,11 @@ const VoucherManagement = () => {
         try {
             if (editMode) {
                 // cập nhật voucher
-                await adminApi.updateVoucher(editingId, formData);
+                await voucherApi.updateVoucher(editingId, formData);
                 toast.success("Voucher updated successfully!");
             } else {
                 // thêm mới voucher
-                await adminApi.addVoucher(formData);
+                await voucherApi.addVoucher(formData);
                 toast.success("Voucher added successfully!");
             }
 
@@ -95,14 +97,12 @@ const VoucherManagement = () => {
     const deleteVoucher = async (id) => {
         if (!window.confirm("Are you sure you want to delete this voucher?")) return;
         try {
-            const response = await adminApi.deleteVoucher(id);
+            const response = await voucherApi.deleteVoucher(id);
             await fetchVoucher();
             toast.success("Delete success!");
         } catch (error) {
-            if (error.response) {
-                const errMessage = error.response.data?.message || 'Đã xảy ra lỗi';
-                toast.error(errMessage);
-            }
+
+            toast.error(error);
         }
     }
 
@@ -181,7 +181,8 @@ const VoucherManagement = () => {
                                 <th>{t('voucherAdmin.description')}</th>
                                 <th>{t('voucherAdmin.quantity')}</th>
                                 <th>{t('voucherAdmin.discount')}</th>
-
+                                <th>{t('voucherAdmin.minOrderValue')}</th>
+                                <th>{t('voucherAdmin.expiryDate')}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -192,11 +193,13 @@ const VoucherManagement = () => {
                                     <td>{row.description}</td>
                                     <td>{row.quantity}</td>
                                     <td>{row.discount}%</td>
+                                    <td>{row.minOrderValue}</td>
+                                    <td>{row.expiryDate}</td>
                                     <td>
                                         <Button className="me-2" onClick={() => handleEditVoucher(row)}>
                                             <FaEdit />
                                         </Button>
-                                        <Button onClick={() => deleteProduct(row.id)}><MdDelete /></Button>
+                                        <Button onClick={() => deleteVoucher(row.id)}><MdDelete /></Button>
                                     </td>
                                 </tr>
                             ))}
@@ -270,6 +273,24 @@ const VoucherManagement = () => {
                                                 className="form-control mb-2"
                                                 value={formData.discount}
                                                 onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
+                                            />
+
+                                            <label>{t('voucherAdmin.minOrderValue')}</label>
+
+                                            <input
+                                                type="number"
+                                                className="form-control mb-2"
+                                                value={formData.minOrderValue}
+                                                onChange={(e) => setFormData({ ...formData, minOrderValue: e.target.value })}
+                                            />
+
+                                            <label>{t('voucherAdmin.expiryDate')}</label>
+
+                                            <input
+                                                type="date"
+                                                className="form-control mb-2"
+                                                value={formData.expiryDate}
+                                                onChange={(e) => setFormData({ ...formData, expiryDate: e.target.value })}
                                             />
                                         </div>
                                         <div className="modal-footer">

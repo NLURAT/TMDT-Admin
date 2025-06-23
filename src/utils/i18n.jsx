@@ -119,7 +119,9 @@ const resources = {
                 "add": "Add",
                 "editVoucher": "Edit Voucher",
                 "addVoucher": "Add New Voucher",
-                "itemsPerPage": "Items/Page"
+                "itemsPerPage": "Items/Page",
+                "minOrderValue":"Min Order Value",
+                "expiryDate":"expiryDate"        
             }
         },
     },
@@ -239,7 +241,9 @@ const resources = {
                 "add": "Thêm",
                 "editVoucher": "Chỉnh sửa voucher",
                 "addVoucher": "Thêm voucher mới",
-                "itemsPerPage": "Mục/trang"
+                "itemsPerPage": "Mục/trang",
+                "minOrderValue":"Đơn hàng tối thiểu",
+                "expiryDate":"Ngày hết hạn"        
             }
         },
     },
