@@ -13,7 +13,7 @@ import { AuthProvider } from './api/AuthContext.jsx'
 import AdminHome from './pages/AdminHome.jsx'
 import OrderManagement from './pages/OrderManagement.jsx'
 import UserManagement from './pages/UserManagement.jsx'
-import ProductManagement from './pages/ProductManagement.jsx'
+import ProductManagement from './pages/ProductManagement'
 import VoucherManagement from './pages/VoucherManagement.jsx'
 function App() {
     return (
