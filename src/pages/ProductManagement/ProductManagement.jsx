@@ -2,16 +2,39 @@ import { Col, Container, Row, Button, Modal, Form } from "react-bootstrap";
 import AdminSidebar from "../../components/AdminSidebar";
 import AdminNav from "../../components/AdminNav";
 import { useEffect, useState } from "react";
-import { getProducts } from "../../api/productApi";
+import {
+  deleteProduct,
+  getProducts,
+} from "../../api/productApi";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import PaginationCom from "../../components/PaginationCom";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames/bind";
-import styles from "./Product.module.scss";
+import styles from "./ProductManagement.module.scss";
+import { Link } from "react-router-dom";
+import { AspectRatio } from "react-bootstrap-icons";
 
 const cx = classNames.bind(styles);
+
+function formatMoney(value) {
+  const amount = Number(value);
+  if (isNaN(amount)) return "0 ₫";
+  return amount.toLocaleString("vi-VN", { maximumFractionDigits: 0 }) + " ₫";
+}
+
+const actions = [
+  {
+    value: "none",
+    title: "...",
+  },
+  {
+    value: "DELETE",
+    title: "Xóa",
+  },
+];
+
 const ProductManagement = () => {
   const { t } = useTranslation();
   const [productList, setProductList] = useState([]);
@@ -46,35 +69,21 @@ const ProductManagement = () => {
       });
   };
 
-  //   const deleteProduct = async (id) => {
-  //     if (!window.confirm(t("product.confirmDelete"))) return;
-  //     try {
-  //       await productApi.deleteProduct(id);
-  //       await fetchProduct();
-  //       toast.success(t("product.deleteSuccess"));
-  //     } catch (error) {
-  //       if (error.response && error.response.status === 404) {
-  //         toast.error("Product not found or already deleted.");
-  //       } else {
-  //         toast.error("Failed to delete this product: " + error.message);
-  //       }
-  //     }
-  //   };
-
-  //   const updateProduct = async (productData) => {
-  //     try {
-  //       await productApi.updateProduct(selectedProduct.id, productData);
-  //       await fetchProduct();
-  //       setShowModal(false);
-  //       toast.success("Update product success!");
-  //     } catch (error) {
-  //       toast.error("Failed to update product: " + error.message);
-  //     }
-  //   };
-
-  const handleEditClick = (product) => {
-    setSelectedProduct(product);
-    setShowModal(true);
+  const handleDetele = async (id) => {
+    console.log("handleDetele");
+    deleteProduct({ id })
+      .then((data) => {
+        if (data.success) {
+          const filteredProducts = products.filter((item) => item.id !== id);
+          setProducts(filteredProducts);
+          toast.success("Xóa sản phẩm thành công");
+        } else {
+          toast.error("Xóa sản phẩm thất bại");
+        }
+      })
+      .catch((err) => {
+        console.error("Lỗi tải sản phẩm:", err);
+      });
   };
 
   const handleModalClose = () => {
@@ -104,23 +113,104 @@ const ProductManagement = () => {
 
   const user = JSON.parse(localStorage.getItem("user"));
 
-  const ProductList = ({ items }) => {
+  const ProductTable = ({ items }) => {
     return (
-      <div>{items && items.map((item) => <ProductItem item={item} />)}</div>
+      <table className={cx("custom-table", "fixed-layout")}>
+        <colgroup>
+          <col style={{ width: "5%" }} />
+          <col style={{ width: "5%" }} />
+          <col style={{ width: "10%" }} />
+          <col style={{ width: "50%" }} />
+          <col style={{ width: "10%" }} />
+          <col style={{ width: "10%" }} />
+        </colgroup>
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>ID</th>
+            <th>Ảnh</th>
+            <th>Thông tin</th>
+            <th>Người bán</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((item, index) => (
+            <ProductRow key={item.id} item={item} index={index} />
+          ))}
+        </tbody>
+      </table>
     );
   };
 
-  const ProductItem = ({ item }) => {
+  function ProductRow({ item, index }) {
+    const [action, setAction] = useState(actions[0]?.value || "");
+    const isLocked = item.status === "LOCKED";
+    const handleActionChange = (e) => {
+      const selectedAction = e.target.value;
+      setAction(selectedAction);
+      switch (selectedAction) {
+        case "DELETE":
+          handleDetele(item.id);
+          break;
+      }
+    };
+
     return (
-      <div className={cx("wrapper")}>
-        <div className={cx("d-flex")}>
-            <div className={cx("grid-col-1")}>
-            <img src="" alt=""  style={{width:"100%"}} />
-        </div>
-        </div>
-      </div>
+      <tr key={item.id} className={cx("product-item", { blocked: isLocked })}>
+        <td>{index + 1}</td>
+        <td>{item.id}</td>
+        <td>
+          <img src={item.thumbnail} />
+        </td>
+        <td>
+          <p className={cx("name")}>{item.name}</p>
+          <p className={cx("price")}>{formatMoney(item.price)}</p>
+          <p className={cx("label")}>Mô tả</p>
+          <p className={cx("description")}>{item.description}</p>
+          <p className={cx("pickUpInfo")}>
+            <span className={cx("label")}>Địa chỉ lấy hàng: </span>
+            {item.pickUpInfo}
+          </p>
+        </td>
+        <td className="center">
+          <Link className={cx("saler-item")}>
+            <div className={cx("grid-col-4")}>
+              <img src={item.userAvatar} alt="" style={{ width: "100%" }} />
+            </div>
+            <p className={cx("userName")}>{item.userName}</p>
+          </Link>
+        </td>
+
+        <td className="center">
+          <div className={cx("d-flex-col")}>
+            <select
+              style={{ fontSize: "15px" }}
+              value={action}
+              onChange={handleActionChange}
+            >
+              {actions &&
+                actions.map((acItem) => (
+                  <option value={acItem.value} key={acItem.value}>
+                    {acItem.title}
+                  </option>
+                ))}
+            </select>
+            {/* <Link
+              className="fake-a"
+              style={{ fontSize: "15px", marginTop: "15px" }}
+              onClick={(e) => {
+                e.preventDefault();
+                handleClickItem(item);
+              }}
+            >
+              Chi tiết
+            </Link> */}
+          </div>
+        </td>
+      </tr>
     );
-  };
+  }
 
   return (
     <div style={{ backgroundColor: "#F5F6FA", minHeight: "100vh" }}>
@@ -131,7 +221,9 @@ const ProductManagement = () => {
           </Col>
           <Col md={10} style={{ minHeight: "100vh" }}>
             <AdminNav title={t("productAdmin.title")} />
-            <ProductList items={products} />
+            <div className={cx("wrapper")}>
+              <ProductTable items={products} />
+            </div>
             <PaginationCom
               currentPage={currentPage}
               onPageChange={handlePageChange}

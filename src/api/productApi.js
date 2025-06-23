@@ -1,5 +1,5 @@
 import axiosInstance from "./axiosInstance";
-export const SERVER_URL_BASE = "http://localhost:3000";
+export const SERVER_URL_BASE = "http://localhost:8080";
 
 const productApi = {
   getAllProduct: () => {
@@ -92,7 +92,7 @@ export async function getProducts() {
       pickUpInfo: item.pickUpInfo,
       userId: item.userId,
       userName: item.userName,
-      userAvatar: item.userAvatar,
+      userAvatar: `${SERVER_URL_BASE}/${item.userAvatar}`,
       isSold: item.sold, // hoặc item.isSold tùy backend
     };
   });
@@ -101,5 +101,25 @@ export async function getProducts() {
 
   return products;
 }
+
+export async function deleteProduct({id}) {
+  console.log("deleteProducts: id" + id);
+  let url = `/ad/products/delete/${id}`;
+  const params = { };
+
+  const response = await axiosInstance.post(url, {});
+
+  const data = response.data;
+  console.log("data:" + JSON.stringify(data, null, 2));
+
+  return {
+    success: data.success,
+    id : data.id
+  }
+
+  
+}
+
+
 
 export default productApi;
