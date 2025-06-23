@@ -1,0 +1,175 @@
+.d-flex {
+  display: flex;
+}
+
+.wrapper {
+  margin: 10px;
+  background-color: white;
+  .product-item {
+    img {
+      width: 100%;
+      aspect-ratio: 1/1;
+    }
+
+    .name {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .label {
+      color: gray;
+    }
+
+    .price {
+      font-size: 20px;
+      color: red;
+    }
+  }
+
+  .saler-item {
+    display: flex;
+    img {
+      aspect-ratio: 1/1;
+      width: 100%;
+      border-radius: 50%;
+    }
+  }
+}
+.custom-table {
+  border-collapse: collapse;
+  width: 100%;
+
+  th {
+    border-bottom: 1px solid #ddd;
+  }
+
+  td.center {
+    text-align: center;
+  }
+
+  td {
+    padding: 4px;
+    img {
+      width: 100%;
+    }
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: #dddddd;
+
+    &.type-1 {
+      background-color: var(--third-color);
+    }
+  }
+
+  tbody tr:nth-child(odd) {
+    background-color: white;
+  }
+
+  &.fixed-layout {
+  table-layout: fixed;
+}
+}
+
+.custom-table.fixed-layout {
+  table-layout: fixed;
+}
+.seperate-horizontal {
+  display: flex;
+  justify-items: center;
+  width: 100%;
+  div {
+    border-bottom: 1px solid gray;
+    width: 95%;
+    margin: 0 auto;
+  }
+}
+
+.seperate-vertical {
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  width: 100%;
+  div {
+    border-bottom: 1px solid gray;
+    width: 95%;
+    margin: 0 auto;
+  }
+}
+
+.d-flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-col-0_5 {
+  width: 4.17%;
+}
+
+.grid-col-1 {
+  width: 8.33%;
+}
+
+.grid-col-1_5 {
+  width: 12.5%;
+}
+
+.grid-col-2 {
+  width: 16.66%;
+}
+
+.grid-col-2_4 {
+  width: 20%;
+}
+
+.grid-col-3 {
+  width: 25%;
+}
+
+.grid-col-3_5 {
+  width: 29.17%;
+}
+
+.grid-col-3_6 {
+  width: 30%;
+}
+
+.grid-col-4 {
+  width: 33.33%;
+}
+
+.grid-col-5 {
+  width: 41.67%;
+}
+
+.grid-col-6 {
+  width: 50%;
+}
+
+.grid-col-7 {
+  width: 58.33%;
+}
+
+.grid-col-8 {
+  width: 66.67%;
+}
+
+.grid-col-9 {
+  width: 75%;
+}
+
+.grid-col-9_6 {
+  width: 80%;
+}
+
+.grid-col-10 {
+  width: 83.33%;
+}
+
+.grid-col-11 {
+  width: 91.67%;
+}
+
+.grid-col-12 {
+  width: 100%;
+}
